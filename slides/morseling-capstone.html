@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morseling — CAO10 Group 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..500;1,6..72,400..500&family=Hanken+Grotesk:wght@400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   THEME TOKENS
+   Cobalt Grid (cream paper + cobalt ink) with one deliberate addition:
+   --dit amber, used ONLY for dit elements in Morse traces/glyphs.
+   =========================================== */
+:root {
+    --paper: #F0EBDE;
+    --paper-2: #E6E0CE;
+    --ink: #1F2BE0;
+    --ink-soft: #5560E5;
+    --grid: rgba(31, 43, 224, 0.08);
+    --ink-faint: rgba(31, 43, 224, 0.18);
+    --dit: #D97A00;
+    --stage-bg: #D9D3C3;
+    --slide-bg: var(--paper);
+
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "Hanken Grotesk", sans-serif;
+    --mono: "DM Mono", ui-monospace, monospace;
+
+    --edge: 96px;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+
+    /* Owl-M logo, used as a CSS mask so it prints in cobalt */
+    --logo: url("data:image/png;base64,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");
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css, verbatim)
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+    .deck-controls {
+        display: none !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   SLIDE SURFACE: graph paper + chrome frame
+   =========================================== */
+.slide {
+    color: var(--ink);
+    font-family: var(--sans);
+    transition: opacity .28s ease;
+    background-color: var(--paper);
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+}
+.chrome {
+    position: absolute;
+    left: var(--edge);
+    right: var(--edge);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 19px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+.chrome.top { top: 64px; border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.chrome.bot { bottom: 64px; border-bottom: 1.5px solid var(--ink); padding-bottom: 16px; color: var(--ink-soft); }
+.chrome.bot b { font-weight: 400; color: var(--ink); }
+
+/* Content rectangle that sits inside the chrome on every content slide */
+.frame {
+    position: absolute;
+    left: var(--edge);
+    right: var(--edge);
+    top: 132px;
+    bottom: 132px;
+    display: flex;
+    flex-direction: column;
+}
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 34px;
+}
+.topbar h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 76px;
+    line-height: .95;
+    letter-spacing: -.01em;
+}
+.topbar h2 em { font-style: italic; }
+.tag { font-family: var(--mono); font-size: 18px; letter-spacing: .06em; color: var(--ink-soft); }
+.body { flex: 1; min-height: 0; }
+
+/* ===========================================
+   TYPE ROLES
+   =========================================== */
+.label {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+.lede { font-family: var(--serif); font-size: 40px; line-height: 1.18; letter-spacing: -.005em; }
+.lede em { font-style: italic; }
+p, li { font-size: 23px; line-height: 1.45; }
+.mono { font-family: var(--mono); letter-spacing: .04em; }
+.num { font-family: var(--mono); font-size: 18px; letter-spacing: .06em; color: var(--ink-soft); }
+.row-h { font-family: var(--serif); font-size: 32px; line-height: 1.08; }
+.soft { color: var(--ink-soft); }
+ul.plain { list-style: none; }
+ul.plain li { padding: 12px 0; border-bottom: 1px solid var(--ink-faint); }
+ul.plain li:last-child { border-bottom: 0; }
+code, .code { font-family: var(--mono); }
+
+/* Morse glyphs: dit = 1 unit amber, dah = 3 units cobalt */
+.m { display: inline-flex; gap: 6px; align-items: center; vertical-align: middle; }
+.m i { display: block; height: 14px; }
+.m i.d { width: 14px; background: var(--dit); }
+.m i.D { width: 42px; background: var(--ink); }
+
+/* ===========================================
+   REVEAL ANIMATION (fires when a slide becomes .visible)
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal.d1 { transition-delay: .08s; }
+.slide.visible .reveal.d2 { transition-delay: .18s; }
+.slide.visible .reveal.d3 { transition-delay: .28s; }
+.slide.visible .reveal.d4 { transition-delay: .38s; }
+.slide.visible .reveal.d5 { transition-delay: .48s; }
+.slide.visible .reveal.d6 { transition-delay: .58s; }
+
+/* Key-scope trace elements "key in" left-to-right */
+@keyframes key { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.k { transform-box: fill-box; transform-origin: left; transform: scaleX(0); }
+.slide.visible .k { animation: key .18s linear forwards; }
+
+/* ===========================================
+   SLIDE 1: TITLE
+   =========================================== */
+.t-kicker { position: absolute; left: var(--edge); top: 176px; font-family: var(--mono); font-size: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.t-title { position: absolute; left: 88px; top: 200px; font-family: var(--serif); font-weight: 400; font-size: 259px; line-height: 1; letter-spacing: -.025em; }
+.t-sub { position: absolute; left: var(--edge); top: 507px; width: 1075px; font-family: var(--serif); font-style: italic; font-size: 45px; line-height: 1.28; }
+.logo { background: var(--ink); -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.t-logo { position: absolute; right: var(--edge); top: 184px; width: 384px; height: 298px; }
+.t-info { position: absolute; right: var(--edge); top: 511px; width: 384px; font-family: var(--mono); font-size: 19px; line-height: 1.9; color: var(--ink-soft); border-top: 1px solid rgba(31,43,224,.35); padding-top: 14px; }
+.t-info div { display: flex; justify-content: space-between; }
+.t-info span:last-child { color: var(--ink); }
+.scope { position: absolute; left: var(--edge); right: var(--edge); border: 1.5px solid var(--ink); background: rgba(240,235,222,.85); }
+.scope svg { display: block; width: 100%; height: 100%; }
+.t-scope { top: 676px; height: 146px; }
+.t-letters { position: absolute; left: var(--edge); right: var(--edge); top: 833px; height: 30px; font-family: var(--mono); font-size: 18px; color: var(--ink-soft); }
+.t-letters span { position: absolute; }
+.t-legend { position: absolute; right: 0; top: 28px; color: var(--ink); }
+
+/* ===========================================
+   SHARED CONTENT LAYOUTS
+   =========================================== */
+.cols { display: grid; gap: 48px; height: 100%; }
+.c2 { grid-template-columns: 1fr 1fr; }
+.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.col-h { border-bottom: 1.5px solid var(--ink); padding-bottom: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: baseline; }
+.box { border: 1.5px solid var(--ink); background: rgba(240,235,222,.9); padding: 28px 32px; }
+.box.fill { background: var(--ink); color: var(--paper); }
+.box.fill .label, .box.fill .num { color: var(--paper); }
+.idx { display: grid; grid-template-columns: 64px 1fr; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--ink-faint); }
+.idx:last-child { border-bottom: 0; }
+.idx p { margin-top: 6px; font-size: 21px; }
+.shot { display: block; border: 1.5px solid var(--ink); background: var(--paper-2); object-fit: cover; object-position: top left; }
+.cap { font-family: var(--mono); font-size: 16px; letter-spacing: .05em; color: var(--ink-soft); margin-top: 10px; }
+table.ledger { width: 100%; border-collapse: collapse; align-self: start; }
+table.ledger.roomy td { font-size: 24px; padding: 20px 20px 20px 0; }
+table.ledger th { text-align: left; font-family: var(--sans); font-weight: 600; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; padding: 0 16px 12px 0; border-bottom: 1.5px solid var(--ink); }
+table.ledger td { font-size: 21px; line-height: 1.35; padding: 13px 16px 13px 0; border-bottom: 1px solid var(--ink-faint); vertical-align: top; }
+table.ledger td.mono { font-size: 18px; }
+table.ledger tr:last-child td { border-bottom: 0; }
+.pass { font-family: var(--mono); font-size: 17px; letter-spacing: .08em; border: 1.5px solid var(--ink); padding: 2px 8px; }
+
+/* Code panels */
+pre.asm {
+    font-family: var(--mono);
+    font-size: 19px;
+    line-height: 1.5;
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink);
+    padding: 22px 26px;
+    white-space: pre;
+    overflow: hidden;
+}
+pre.asm .c { color: var(--ink-soft); }
+pre.asm .kw { font-weight: 500; }
+pre.asm .hl { background: rgba(217,122,0,.16); box-shadow: inset 3px 0 0 var(--dit); }
+
+/* Bit-word diagram (slide 8) */
+.bits { display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; }
+.bits div { height: 64px; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; }
+.bits div.off { border-color: var(--ink-faint); color: var(--ink-faint); }
+.bits div.dah { background: var(--ink); color: var(--paper); }
+.bits div.dit { background: var(--dit); border-color: var(--dit); color: var(--paper); }
+.bits div.cnt { background: var(--paper-2); }
+.bitnums { display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; font-family: var(--mono); font-size: 14px; color: var(--ink-soft); text-align: center; margin-top: 6px; }
+
+/* Timing rulers (slide 10) */
+.ruler { position: relative; height: 92px; border: 1.5px solid var(--ink); display: flex; }
+.ruler > div { position: relative; display: flex; flex-direction: column; justify-content: center; padding: 0 16px; border-right: 1.5px solid var(--ink); }
+.ruler > div:last-child { border-right: 0; }
+.ruler .z-dit { background: rgba(217,122,0,.18); }
+.ruler .z-dah { background: rgba(31,43,224,.12); }
+.ruler .z-bad { background-image: repeating-linear-gradient(135deg, var(--ink-faint) 0 2px, transparent 2px 12px); }
+.ruler > div { flex: none; }
+.ruler .zn { font-family: var(--serif); font-size: 30px; line-height: 1; white-space: nowrap; }
+.ruler .zs { white-space: nowrap; }
+.ruler .zs { font-family: var(--mono); font-size: 15px; letter-spacing: .04em; color: var(--ink-soft); margin-top: 6px; }
+.ticks { position: relative; height: 34px; font-family: var(--mono); font-size: 17px; }
+.ticks span { position: absolute; top: 8px; transform: translateX(-50%); }
+
+/* Architecture diagram (slide 6) */
+.arch text { font-family: var(--sans); fill: var(--ink); }
+.arch .lane { fill: rgba(240,235,222,.92); stroke: var(--ink); stroke-width: 1.5; }
+.arch .node { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+.arch .node.core { fill: var(--ink); }
+.arch .lt { font-family: var(--sans); font-weight: 600; font-size: 15px; letter-spacing: .16em; }
+.arch .nt { font-family: var(--serif); font-size: 25px; }
+.arch .ns { font-family: var(--mono); font-size: 15px; fill: var(--ink-soft); }
+.arch .core text { fill: var(--paper); }
+.arch .wire { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.arch .wl { font-family: var(--mono); font-size: 15px; }
+
+/* Big numerals (slide 13) */
+.big { font-family: var(--serif); font-size: 124px; line-height: .9; letter-spacing: -.02em; }
+
+/* ===========================================
+   INLINE EDITING (press E or hover top-left corner)
+   =========================================== */
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle {
+    position: fixed; top: 16px; left: 16px; z-index: 10001;
+    font: 500 14px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--paper); background: var(--ink); border: 0; padding: 10px 14px; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+body.editing [contenteditable="true"] { outline: 1px dashed rgba(217,122,0,.7); outline-offset: 4px; }
+.progress { position: fixed; left: 0; bottom: 0; height: 4px; background: var(--ink); transition: width .3s var(--ease); z-index: 1000; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ======================= 01 TITLE ======================= -->
+<section class="slide" aria-label="Title">
+    <div class="chrome top reveal d1"><span>Angeles University Foundation · College of Computer Studies</span><span>CAO10 — Computer Architecture and Organization</span><span>01 / 14</span></div>
+    <div class="t-kicker reveal d1">Final project · Group 7</div>
+    <h1 class="t-title reveal d2">Morseling</h1>
+    <p class="t-sub reveal d3">An assembly-based assistive and pedagogical platform for Morse code communication and learning</p>
+    <div class="t-logo logo reveal d2" role="img" aria-label="Morseling owl-M logo"></div>
+    <div class="t-info reveal d4">
+        <div><span>core</span><span>MASM x64 · ml64</span></div>
+        <div><span>surface</span><span>C# .NET 8 WPF</span></div>
+        <div><span>verified</span><span>110 / 110 pass</span></div>
+    </div>
+    <div class="scope t-scope reveal d4" aria-hidden="true">
+        <svg viewBox="0 0 43 10" preserveAspectRatio="none">
+            <path stroke="#1F2BE0" stroke-opacity=".18" stroke-width=".04" d="M1 0V10M2 0V10M3 0V10M4 0V10M5 0V10M6 0V10M7 0V10M8 0V10M9 0V10M10 0V10M11 0V10M12 0V10M13 0V10M14 0V10M15 0V10M16 0V10M17 0V10M18 0V10M19 0V10M20 0V10M21 0V10M22 0V10M23 0V10M24 0V10M25 0V10M26 0V10M27 0V10M28 0V10M29 0V10M30 0V10M31 0V10M32 0V10M33 0V10M34 0V10M35 0V10M36 0V10M37 0V10M38 0V10M39 0V10M40 0V10M41 0V10M42 0V10"/>
+            <line x1="0" y1="7.2" x2="43" y2="7.2" stroke="#1F2BE0" stroke-opacity=".45" stroke-width=".05"/>
+            <g fill="#1F2BE0">
+                <rect class="k" style="animation-delay:.7s" x=".12" y="2.8" width="2.76" height="4.4"/><rect class="k" style="animation-delay:.82s" x="4.12" y="2.8" width="2.76" height="4.4"/>
+                <rect class="k" style="animation-delay:.94s" x="10.12" y="2.8" width="2.76" height="4.4"/><rect class="k" style="animation-delay:1.06s" x="14.12" y="2.8" width="2.76" height="4.4"/><rect class="k" style="animation-delay:1.18s" x="18.12" y="2.8" width="2.76" height="4.4"/>
+                <rect class="k" style="animation-delay:1.36s" x="26.12" y="2.8" width="2.76" height="4.4"/>
+            </g>
+            <g fill="#D97A00">
+                <rect class="k" style="animation-delay:1.3s" x="24.12" y="2.8" width=".76" height="4.4"/><rect class="k" style="animation-delay:1.48s" x="30.12" y="2.8" width=".76" height="4.4"/>
+                <rect class="k" style="animation-delay:1.56s" x="34.12" y="2.8" width=".76" height="4.4"/><rect class="k" style="animation-delay:1.62s" x="36.12" y="2.8" width=".76" height="4.4"/><rect class="k" style="animation-delay:1.68s" x="38.12" y="2.8" width=".76" height="4.4"/>
+                <rect class="k" style="animation-delay:1.8s" x="42.12" y="2.8" width=".76" height="4.4"/>
+            </g>
+        </svg>
+    </div>
+    <div class="t-letters reveal d5">
+        <span style="left:4.1%">M</span><span style="left:36.5%">O</span><span style="left:63%">R</span><span style="left:84.5%">S</span><span style="left:97.8%">E</span>
+        <span class="t-legend">42 units · <span style="position:static;color:var(--dit)">■ dit 1T</span> · ■ dah 3T</span>
+    </div>
+    <div class="chrome bot reveal d6" style="text-transform:none"><b>Alec Ezekiel M. Dela Pena · Justine Marion D. Gayola · Christoffer Kent R. Pamandanan</b><span>Instructor: Ray A. Nicolas · October 2026</span></div>
+</section>
+
+<!-- ======================= 02 PROBLEM ======================= -->
+<section class="slide" aria-label="Problem">
+    <div class="chrome top"><span>Chapter I · Introduction</span><span>1.1 Statement of the problem</span><span>02 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>The problem</h2><span class="tag">WHO, 2022 · Nel et al., 2018 · Yang, 2000</span></div>
+        <div class="body cols" style="grid-template-columns:1.25fr 1fr">
+            <div>
+                <p class="lede reveal d2" style="margin-bottom:26px">Common computer input assumes <em>fine motor control</em>, which many people with neuromuscular or speech impairments don't have.</p>
+                <div class="idx reveal d3"><span class="num">01</span><div><div class="row-h">Physical barrier</div><p>QWERTY keyboards, touchscreens and optical trackers need dexterity and continuous hand–eye coordination.</p></div></div>
+                <div class="idx reveal d4"><span class="num">02</span><div><div class="row-h">Heavy assistive stacks</div><p>Commercial AAC and speech software rely on intensive runtimes and proprietary hardware, often impractical where resources are scarce.</p></div></div>
+                <div class="idx reveal d5"><span class="num">03</span><div><div class="row-h">Timing jitter</div><p>Most Morse tools are written in managed languages. GC pauses and OS scheduling add jitter to single-switch timing.</p></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:28px">
+                <div class="box reveal d3">
+                    <div class="label" style="margin-bottom:18px">Why Morse code</div>
+                    <p style="margin-bottom:22px">An established, low-complexity binary and tonal protocol. One switch and two durations reach the whole alphabet, as sound, light or touch.</p>
+                    <div style="display:flex;gap:40px;align-items:center;font-family:var(--mono);font-size:19px">
+                        <span class="m"><i class="d"></i></span><span>dit · 1 unit</span>
+                        <span class="m"><i class="D"></i></span><span>dah · 3 units</span>
+                    </div>
+                </div>
+                <div class="box fill reveal d4" style="flex:1;display:flex;flex-direction:column;justify-content:space-between">
+                    <div class="label">Our response</div>
+                    <p class="lede" style="font-size:36px">Run signal translation and timing quantization at the processor level, in an x64 assembly core behind an accessible interface.</p>
+                    <div class="num" style="opacity:.8">Pereira et al., 2017</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>02</b></div>
+</section>
+
+<!-- ======================= 03 OBJECTIVES ======================= -->
+<section class="slide" aria-label="Objectives">
+    <div class="chrome top"><span>Chapter I · Introduction</span><span>1.2 Objectives of the study</span><span>03 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Objectives</h2><span class="tag">1.2.1 GENERAL · 1.2.2 SPECIFIC</span></div>
+        <div class="body" style="display:grid;grid-template-columns:560px 1fr;gap:64px">
+            <div class="reveal d2">
+                <div class="label" style="margin-bottom:18px">General objective</div>
+                <p class="lede" style="font-size:38px">To design, implement and evaluate an <em>x86-64 assembly-based</em> Morse code platform that lets people with visual, auditory or speech impairments, and curious learners, practice and use Morse code through deterministic multi-modal feedback.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:48px;align-content:start">
+                <div class="idx reveal d2"><span class="num">01</span><div><div class="row-h">Decoupled architecture</div><p>A clean ABI between an unmanaged 64-bit MASM core and a managed C# presentation layer.</p></div></div>
+                <div class="idx reveal d3"><span class="num">02</span><div><div class="row-h">O(1) lookup engine</div><p>Read-only binary tables that encode characters to packed bitstreams and decode them back in constant time.</p></div></div>
+                <div class="idx reveal d4"><span class="num">03</span><div><div class="row-h">Low-level signal routines</div><p>16-bit byte-split serialization, press-duration Dit/Dah classification, and RDTSC cycle capture.</p></div></div>
+                <div class="idx reveal d5"><span class="num">04</span><div><div class="row-h">Multi-modal interface</div><p>High-contrast visual cues, an oscilloscope-style Key Scope, and non-blocking PCM sidetone.</p></div></div>
+                <div class="idx reveal d6" style="border-bottom:0"><span class="num">05</span><div><div class="row-h">Benchmark and validate</div><p>Verify classification across 110 automated integration tests and measure execution determinism.</p></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>03</b></div>
+</section>
+
+<!-- ======================= 04 SCOPE ======================= -->
+<section class="slide" aria-label="Scope and significance">
+    <div class="chrome top"><span>Chapter I · Introduction</span><span>1.3 Scope · 1.4 Significance</span><span>04 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Scope, limits and who it serves</h2><span class="tag">CH. 1.3 – 1.4</span></div>
+        <div class="body cols c3">
+            <div class="reveal d2">
+                <div class="col-h"><span class="label">Functional scope</span><span class="num">IN</span></div>
+                <ul class="plain">
+                    <li><b>Users:</b> people with speech, motor, auditory or visual constraints, plus architecture students.</li>
+                    <li><b>Core:</b> encoding, press quantization, buffer decoding, gap evaluation, cycle tracking.</li>
+                    <li><b>Input:</b> one switch (Spacebar or USB assistive switch) plus keyboard.</li>
+                    <li><b>Feedback:</b> text, signal lamp, Key Scope, 700 Hz PCM sidetone.</li>
+                    <li><b>Drills:</b> character sets, sentences, ear training.</li>
+                </ul>
+            </div>
+            <div class="reveal d3">
+                <div class="col-h"><span class="label">Delimitations</span><span class="num">OUT</span></div>
+                <ul class="plain">
+                    <li><b>Hardware:</b> 64-bit Windows PCs with USB HID switches only. No telegraph sounders or UART microcontrollers.</li>
+                    <li><b>Characters:</b> A–Z, 0–9 and <code>. , ?</code>. No prosigns or non-Latin sets.</li>
+                    <li><b>Language:</b> English characters and words. No predictive text or autocorrect.</li>
+                    <li><b>Platform:</b> Native desktop app. No web, cloud or mobile.</li>
+                </ul>
+            </div>
+            <div class="reveal d4">
+                <div class="col-h"><span class="label">Significance</span><span class="num">FOR</span></div>
+                <ul class="plain">
+                    <li><b>Users with impairments:</b> a non-verbal path from single presses to language.</li>
+                    <li><b>AT / HCI developers:</b> a documented managed-to-unmanaged (P/Invoke) template.</li>
+                    <li><b>CS educators and students:</b> registers and O(1) indexing applied to a real problem.</li>
+                    <li><b>Radio learners:</b> drills, live timing feedback and adjustable speed.</li>
+                    <li><b>Researchers:</b> a baseline for haptics, microcontrollers and new symbol sets.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>04</b></div>
+</section>
+
+<!-- ======================= 05 TOOLCHAIN & ABI ======================= -->
+<section class="slide" aria-label="Toolchain and ABI">
+    <div class="chrome top"><span>Chapter II · Background and rationale</span><span>2.1 Toolchain · 2.2 ABI</span><span>05 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Toolchain and the x64 ABI</h2><span class="tag">MICROSOFT x64 CALLING CONVENTION</span></div>
+        <div class="body cols" style="grid-template-columns:1.05fr 1fr">
+            <table class="ledger reveal d2">
+                <thead><tr><th style="width:250px">Component</th><th>Role in Morseling</th></tr></thead>
+                <tbody>
+                    <tr><td class="row-h" style="font-size:26px">MASM · ml64</td><td>Assembles the x64 core into <code>MorseCore.dll</code> through <code>build-native.ps1</code>.</td></tr>
+                    <tr><td class="row-h" style="font-size:26px">P/Invoke</td><td>.NET bridge for native calls, pointer passing and unmanaged memory transitions.</td></tr>
+                    <tr><td class="row-h" style="font-size:26px">C# .NET 8 WPF</td><td>High-contrast light/dark UI, large type, live Key Scope.</td></tr>
+                    <tr><td class="row-h" style="font-size:26px">ITU-R M.1677-1</td><td>Timing standard: dit 1, dah 3, gaps of 1, 3 and 7 units.</td></tr>
+                    <tr><td class="row-h" style="font-size:26px">winmm.dll</td><td><code>waveOut</code> streams 16-bit PCM sidetone off the UI thread.</td></tr>
+                </tbody>
+            </table>
+            <div class="reveal d3" style="display:flex;flex-direction:column;gap:22px">
+                <div class="label">Argument registers → return</div>
+                <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+                    <div class="box" style="padding:18px;text-align:center"><div class="row-h">RCX</div><div class="num">arg 1</div></div>
+                    <div class="box" style="padding:18px;text-align:center"><div class="row-h">RDX</div><div class="num">arg 2</div></div>
+                    <div class="box" style="padding:18px;text-align:center"><div class="row-h">R8</div><div class="num">arg 3</div></div>
+                    <div class="box" style="padding:18px;text-align:center"><div class="row-h">R9</div><div class="num">arg 4</div></div>
+                    <div class="box fill" style="padding:18px;text-align:center"><div class="row-h">RAX</div><div class="num">return</div></div>
+                </div>
+                <ul class="plain">
+                    <li><b>Shadow space:</b> the caller reserves 32 bytes (<code>0x20</code>) of home space before every call.</li>
+                    <li><b>Alignment:</b> RSP stays 16-byte aligned at each call site.</li>
+                    <li><b>Preserved:</b> RBX, RBP, RDI, RSI, R12–R15 are pushed and popped. RAX, RCX, RDX and R8–R11 are volatile.</li>
+                    <li><b>Segments:</b> lookup tables live in read-only <code>.const / .rdata</code>. Buffers are pinned by the caller across P/Invoke.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>05</b></div>
+</section>
+
+<!-- ======================= 06 ARCHITECTURE ======================= -->
+<section class="slide" aria-label="Architecture">
+    <div class="chrome top"><span>Chapter II · Background and rationale</span><span>2.4 System flow and architecture</span><span>06 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Decoupled hybrid architecture</h2><span class="tag">CONTEXT.md §2 · CH. 2.4</span></div>
+        <div class="body reveal d2">
+            <svg class="arch" viewBox="0 0 1728 660" role="img" aria-label="Architecture: hardware layer feeds the WPF presentation layer, which calls the MASM core through P/Invoke">
+                <!-- lanes -->
+                <rect class="lane" x="0" y="0" width="330" height="660"/>
+                <rect class="lane" x="390" y="0" width="640" height="660"/>
+                <rect class="lane" x="1090" y="0" width="638" height="660"/>
+                <text class="lt" x="24" y="40">HARDWARE LAYER</text>
+                <text class="lt" x="414" y="40">PRESENTATION · MorseApp.exe (C# .NET 8 WPF)</text>
+                <text class="lt" x="1114" y="40">COMPUTATIONAL CORE · MorseCore.dll (MASM x64)</text>
+                <!-- hardware nodes -->
+                <g><rect class="node" x="24" y="80" width="282" height="110"/><text class="nt" x="44" y="124">USB switch / Spacebar</text><text class="ns" x="44" y="158">raw key-down / key-up</text></g>
+                <g><rect class="node" x="24" y="275" width="282" height="110"/><text class="nt" x="44" y="319">Audio device</text><text class="ns" x="44" y="353">winmm waveOut sidetone</text></g>
+                <g><rect class="node" x="24" y="470" width="282" height="110"/><text class="nt" x="44" y="514">Display</text><text class="ns" x="44" y="548">light default · dark theme</text></g>
+                <!-- presentation nodes -->
+                <g><rect class="node" x="414" y="80" width="290" height="110"/><text class="nt" x="434" y="124">Switch handler</text><text class="ns" x="434" y="158">Stopwatch µs timers</text></g>
+                <g><rect class="node" x="414" y="275" width="290" height="110"/><text class="nt" x="434" y="319">PcmAudioEngine</text><text class="ns" x="434" y="353">worker-thread sidetone</text></g>
+                <g><rect class="node" x="414" y="470" width="290" height="110"/><text class="nt" x="434" y="514">Themed UI · 4 modes</text><text class="ns" x="434" y="548">KeyScope · Ear Training</text></g>
+                <g><rect class="node" x="740" y="178" width="266" height="110"/><text class="nt" x="760" y="222">MorseEngineService</text><text class="ns" x="760" y="256">unit math · wrappers</text></g>
+                <g><rect class="node" x="740" y="372" width="266" height="110"/><text class="nt" x="760" y="416">NativeMethods</text><text class="ns" x="760" y="450">[DllImport] · P/Invoke</text></g>
+                <!-- core nodes -->
+                <g class="core"><rect class="node core" x="1114" y="80" width="590" height="80"/><text class="nt" x="1134" y="118">Lookup tables · .const</text><text class="ns" x="1134" y="146" style="fill:#C9CCF7">128-entry ASCII · flattened dichotomic tree</text></g>
+                <g class="core"><rect class="node core" x="1114" y="180" width="590" height="80"/><text class="nt" x="1134" y="218">Morse_EncodeChar · DecodeChar</text><text class="ns" x="1134" y="246" style="fill:#C9CCF7">O(1) base + index×2</text></g>
+                <g class="core"><rect class="node core" x="1114" y="280" width="590" height="80"/><text class="nt" x="1134" y="318">Morse_QuantizePress</text><text class="ns" x="1134" y="346" style="fill:#C9CCF7">0.25T · 2T · 6T thresholds</text></g>
+                <g class="core"><rect class="node core" x="1114" y="380" width="590" height="80"/><text class="nt" x="1134" y="418">Morse_EvaluateGap</text><text class="ns" x="1134" y="446" style="fill:#C9CCF7">2.5T char · 6T word</text></g>
+                <g class="core"><rect class="node core" x="1114" y="480" width="590" height="80"/><text class="nt" x="1134" y="518">Morse_GetBenchmarkCycles</text><text class="ns" x="1134" y="546" style="fill:#C9CCF7">RDTSC cycle counter</text></g>
+                <!-- wires -->
+                <path class="wire" d="M306 135 H414"/><text class="wl" x="316" y="124">keypress</text>
+                <path class="wire" d="M414 330 H306"/><text class="wl" x="322" y="320">tone</text>
+                <path class="wire" d="M414 525 H306"/><text class="wl" x="322" y="515">render</text>
+                <path class="wire" d="M704 135 H722 V233 H740"/>
+                <path class="wire" d="M873 288 V372"/>
+                <path class="wire" d="M1006 427 H1060 V320 H1114"/><text class="wl" x="1012" y="306">RCX · RDX</text>
+                <path class="wire" d="M1114 520 H1060 V460 H1006" stroke-dasharray="6 6"/><text class="wl" x="1012" y="600">RAX: tokens · chars</text>
+                <path class="wire" d="M740 233 H722 V525 H704"/>
+                <!-- note -->
+                <text class="ns" x="1114" y="630" style="fill:#1F2BE0">The native core is the single source of truth for Morse behaviour.</text>
+            </svg>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>06</b></div>
+</section>
+
+<!-- ======================= 07 PARADIGM ======================= -->
+<section class="slide" aria-label="Interface paradigm">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>3.1.1 Architectural evaluation</span><span>07 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Why not a CLI or an INT 10h GUI?</h2><span class="tag">CH. 3.1.1</span></div>
+        <div class="body" style="display:flex;flex-direction:column;gap:34px">
+            <table class="ledger roomy reveal d2">
+                <thead><tr><th style="width:280px">Criterion</th><th>Text-mode CLI</th><th>INT 10h / 16h GUI</th><th style="color:var(--ink)">Decoupled surface · chosen</th></tr></thead>
+                <tbody>
+                    <tr><td class="row-h" style="font-size:27px">Accessibility</td><td>80×25 character cells. No type scaling or high-contrast palettes.</td><td>Rudimentary real-mode graphics.</td><td><b>WPF high-contrast themes, large type, Key Scope.</b></td></tr>
+                    <tr><td class="row-h" style="font-size:27px">Execution mode</td><td>Runs, but has no visual bandwidth for live feedback.</td><td>16-bit real mode only. In x64 protected mode it triggers a General Protection Fault.</td><td><b>MASM DLL runs natively in 64-bit protected mode.</b></td></tr>
+                    <tr><td class="row-h" style="font-size:27px">Audio and timing</td><td>Synchronous output blocks the input loop.</td><td>Interrupt-driven audio freezes the thread during each tone.</td><td><b>winmm waveOut on its own worker thread.</b></td></tr>
+                </tbody>
+            </table>
+            <div class="cols c2" style="height:auto">
+                <div class="box reveal d3"><div class="label" style="margin-bottom:12px">1 · Unmanaged backend</div><p>MASM x64 <code>MorseCore.dll</code> handles every cycle-critical operation: bit-packed serialization, constant-time tables, microsecond quantization, benchmarking.</p></div>
+                <div class="box reveal d4"><div class="label" style="margin-bottom:12px">2 · Accessible frontend</div><p>C# .NET 8 WPF host for visual feedback, responsive key listeners, and unbuffered audio that never blocks the native calls.</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>07</b></div>
+</section>
+
+<!-- ======================= 08 BIT PACKING ======================= -->
+<section class="slide" aria-label="Bit-packed tables">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>3.2.1 Structural representation</span><span>08 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>One character, one 16-bit word</h2><span class="tag">lookup_tables.asm · .const · ALIGN 16</span></div>
+        <div class="body cols" style="grid-template-columns:1.25fr 1fr">
+            <div style="display:flex;flex-direction:column;gap:26px">
+                <div class="reveal d2">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="label">AH · pattern (MSB-first, 1 = dah)</span><span class="label">AL · element count N</span></div>
+                    <div class="bits">
+                        <div class="off">0</div><div class="off">0</div><div class="off">0</div><div class="off">0</div>
+                        <div class="dah">1</div><div class="dit">0</div><div class="dah">1</div><div class="dit">0</div>
+                        <div class="cnt">0</div><div class="cnt">0</div><div class="cnt">0</div><div class="cnt">0</div>
+                        <div class="cnt">0</div><div class="cnt">1</div><div class="cnt">0</div><div class="cnt">0</div>
+                    </div>
+                    <div class="bitnums"><span>15</span><span>14</span><span>13</span><span>12</span><span>11</span><span>10</span><span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span><span>0</span></div>
+                </div>
+                <div class="reveal d3" style="display:flex;gap:36px;align-items:center">
+                    <span class="row-h" style="font-size:44px">'C'</span>
+                    <span class="m"><i class="D"></i><i class="d"></i><i class="D"></i><i class="d"></i></span>
+                    <span class="mono" style="font-size:24px"><code>DB 4, 0Ah</code> → AX = <b>0x0A04</b></span>
+                </div>
+                <ul class="plain reveal d4">
+                    <li><b>No strings, no heap:</b> count and pattern share one register, so both fields are readable without runtime extraction shifts.</li>
+                    <li><b>Direct ASCII table:</b> 128 words in read-only <code>.const</code>, read with a single <code>[rdx + rcx*2]</code> fetch.</li>
+                    <li><b>Up to N = 6:</b> covers punctuation like <code>.-.-.-</code> and <code>..--..</code>.</li>
+                </ul>
+            </div>
+            <div class="reveal d3">
+                <div class="label" style="margin-bottom:12px">Reverse lookup: flattened dichotomic tree</div>
+                <p class="lede" style="font-size:44px;margin-bottom:18px">Index = (2<sup style="font-size:.55em">N</sup> − 2) + pattern</p>
+                <table class="ledger">
+                    <thead><tr><th>N</th><th>Pattern</th><th>Index</th><th>Morse</th><th>ASCII</th></tr></thead>
+                    <tbody class="mono">
+                        <tr><td>1</td><td>0₂</td><td>0</td><td><span class="m"><i class="d"></i></span></td><td><b>E</b></td></tr>
+                        <tr><td>1</td><td>1₂</td><td>1</td><td><span class="m"><i class="D"></i></span></td><td><b>T</b></td></tr>
+                        <tr><td>2</td><td>01₂</td><td>3</td><td><span class="m"><i class="d"></i><i class="D"></i></span></td><td><b>A</b></td></tr>
+                        <tr><td>2</td><td>10₂</td><td>4</td><td><span class="m"><i class="D"></i><i class="d"></i></span></td><td><b>N</b></td></tr>
+                        <tr><td>3</td><td>000₂</td><td>6</td><td><span class="m"><i class="d"></i><i class="d"></i><i class="d"></i></span></td><td><b>S</b></td></tr>
+                        <tr><td>3</td><td>111₂</td><td>13</td><td><span class="m"><i class="D"></i><i class="D"></i><i class="D"></i></span></td><td><b>O</b></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>08</b></div>
+</section>
+
+<!-- ======================= 09 CODE ======================= -->
+<section class="slide" aria-label="Encoder and quantizer code">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>3.2.2 – 3.2.3 Core routines</span><span>09 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Inside the MASM core</h2><span class="tag">encoder.asm · quantizer.asm</span></div>
+        <div class="body cols c2" style="gap:40px">
+            <div class="reveal d2" style="display:flex;flex-direction:column">
+                <div class="col-h"><span class="label">Morse_EncodeChar</span><span class="num">ECX = ASCII → AX = word</span></div>
+<pre class="asm"><span class="kw">Morse_EncodeChar PROC</span>
+    cmp  ecx, 'a'           <span class="c">; below 'a'? nothing to fold</span>
+    jb   @Lookup
+    cmp  ecx, 'z'
+    ja   @Lookup
+<span class="hl">    sub  ecx, 20h           <span class="c">; fold lowercase to uppercase</span></span>
+@Lookup:
+    and  ecx, 7Fh           <span class="c">; clamp index to 0..127</span>
+    lea  rdx, MorseAsciiTable
+<span class="hl">    movzx eax, word ptr [rdx + rcx * 2]</span>
+    ret                     <span class="c">; O(1): one memory read</span>
+<span class="kw">Morse_EncodeChar ENDP</span></pre>
+                <p style="margin-top:18px;font-size:21px">Case folding is one subtraction. The table read is one base + index×2 fetch, with no loops and no data-dependent branches.</p>
+            </div>
+            <div class="reveal d3" style="display:flex;flex-direction:column">
+                <div class="col-h"><span class="label">Morse_QuantizePress</span><span class="num">RCX = t · RDX = T → EAX</span></div>
+<pre class="asm"><span class="kw">Morse_QuantizePress PROC</span>
+    mov  r8, rdx
+<span class="hl">    shr  r8, 2              <span class="c">; T/4  (debounce floor)</span></span>
+    cmp  rcx, r8
+    jb   @Debounce          <span class="c">; → 0 NONE</span>
+<span class="hl">    imul r9, rdx, 6         <span class="c">; 6T   (hold ceiling)</span></span>
+    cmp  rcx, r9
+    ja   @OverExtended      <span class="c">; → 3 INVALID</span>
+    mov  r8, rdx
+<span class="hl">    shl  r8, 1              <span class="c">; 2T   (dit / dah edge)</span></span>
+    cmp  rcx, r8
+    jae  @IsDah             <span class="c">; → 2 DAH</span>
+    mov  eax, 1             <span class="c">; → 1 DIT</span>
+    ret</pre>
+                <p style="margin-top:18px;font-size:21px">Integer shifts and multiplies only. No division and no FPU. Volatile registers only, so nothing needs saving.</p>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>09</b></div>
+</section>
+
+<!-- ======================= 10 TIMING ======================= -->
+<section class="slide" aria-label="Timing model">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>2.5 · 3.2.3 – 3.2.4 Timing model</span><span>10 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Unit-relative timing</h2><span class="tag">T = 1,200,000 / WPM µs · 15 WPM → T = 80 ms · scale 0–8T</span></div>
+        <div class="body" style="display:flex;flex-direction:column;gap:20px">
+            <div class="reveal d2">
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="label">Press classification · Morse_QuantizePress</span><span class="num">at 15 WPM</span></div>
+                <div class="ruler">
+                    <div class="z-bad" style="width:3.125%"></div>
+                    <div class="z-dit" style="width:21.875%"><span class="zn">DIT · 1</span><span class="zs">20 – 159 ms</span></div>
+                    <div class="z-dah" style="width:50%"><span class="zn">DAH · 2</span><span class="zs">160 – 480 ms</span></div>
+                    <div class="z-bad" style="flex:1"><span class="zn">INVALID · 3</span><span class="zs">&gt; 480 ms</span></div>
+                </div>
+                <div class="ticks"><span style="left:3.125%">0.25T</span><span style="left:25%">2T</span><span style="left:75%">6T</span><span style="left:99%">8T</span></div>
+                <p class="num" style="margin-top:2px">Below 0.25T returns 0 (NONE): switch bounce is rejected before it reaches the buffer.</p>
+            </div>
+            <div class="reveal d3">
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="label">Idle-gap evaluation · Morse_EvaluateGap</span><span class="num">at 15 WPM</span></div>
+                <div class="ruler">
+                    <div style="width:31.25%"><span class="zn">CONTINUE · 0</span><span class="zs">&lt; 200 ms · still inside the character</span></div>
+                    <div class="z-dit" style="width:43.75%"><span class="zn">COMMIT CHAR · 1</span><span class="zs">200 – 479 ms · decode and dispatch</span></div>
+                    <div class="z-dah" style="flex:1"><span class="zn">COMMIT WORD · 2</span><span class="zs">≥ 480 ms · insert space</span></div>
+                </div>
+                <div class="ticks"><span style="left:31.25%">2.5T</span><span style="left:75%">6T</span><span style="left:99%">8T</span></div>
+            </div>
+            <div class="cols c3 reveal d4" style="height:auto;gap:32px">
+                <div class="box" style="padding:20px 26px"><div class="label" style="margin-bottom:8px">Why these edges</div><p style="font-size:20px">They sit between the ideal ITU lengths (1T, 3T, 7T), which tolerates human timing error at any WPM.</p></div>
+                <div class="box" style="padding:20px 26px"><div class="label" style="margin-bottom:8px">Playback</div><p style="font-size:20px">Dit 1T, dah 3T, element gap 1T, letter gap 3T, word gap 7T. <code>timeBeginPeriod(1)</code> plus a spin-wait keeps short units accurate.</p></div>
+                <div class="box fill" style="padding:20px 26px"><div class="label" style="margin-bottom:8px">RDTSC telemetry</div><p style="font-size:20px"><code>rdtsc · shl rdx,32 · or rax,rdx</code> gives a 64-bit cycle stamp. The app reads ~3–6 k cycles per native call.</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>10</b></div>
+</section>
+
+<!-- ======================= 11 APPLICATION ======================= -->
+<section class="slide" aria-label="The application">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>3.1.2 Functional UI requirements</span><span>11 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Four modes, one switch</h2><span class="tag">FIGURES 3.1c – 3.1d</span></div>
+        <div class="body" style="display:flex;flex-direction:column;gap:28px">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:28px">
+                <div class="idx reveal d2" style="border-bottom:1.5px solid var(--ink);padding-top:0"><span class="num">01</span><div><div class="row-h" style="font-size:28px">Learning Drills</div><p style="font-size:19px">See a character, key its pattern. Streaks and alphabet strip.</p></div></div>
+                <div class="idx reveal d3" style="border-bottom:1.5px solid var(--ink);padding-top:0"><span class="num">02</span><div><div class="row-h" style="font-size:28px">Sentence Challenge</div><p style="font-size:19px">Transcribe a phrase. 2.5T and 6T gaps are checked live.</p></div></div>
+                <div class="idx reveal d4" style="border-bottom:1.5px solid var(--ink);padding-top:0"><span class="num">03</span><div><div class="row-h" style="font-size:28px">Freeform Sandbox</div><p style="font-size:19px">Open keying to text, then play it back in Morse.</p></div></div>
+                <div class="idx reveal d5" style="border-bottom:1.5px solid var(--ink);padding-top:0"><span class="num">04</span><div><div class="row-h" style="font-size:28px">Ear Training</div><p style="font-size:19px">Hear it, name it. Answer by click, keyboard or key.</p></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:660px 660px 1fr;gap:28px;flex:1;min-height:0">
+                <figure class="reveal d3"><img class="shot" src="assets/sentence.png" alt="Sentence Challenge with HELLO WORLD completed and key scope trace" style="width:660px;height:427px"><figcaption class="cap">Sentence Challenge · HELLO WORLD sent</figcaption></figure>
+                <figure class="reveal d4"><img class="shot" src="assets/sandbox.png" alt="Freeform Sandbox decoding CAO10 with quick reference chart" style="width:660px;height:427px"><figcaption class="cap">Freeform Sandbox · "CAO10" decoded</figcaption></figure>
+                <div class="reveal d5" style="display:flex;flex-direction:column;gap:14px">
+                    <div class="label">Live Key Scope</div>
+                    <p style="font-size:20px">A scrolling trace of the key line, 42 units wide. A perfect dit fills one grid cell and a dah fills three. The scale follows WPM.</p>
+                    <p style="font-size:20px">Each bar's class comes straight from <code>Morse_QuantizePress</code>, so users can watch the thresholds work.</p>
+                    <p class="num">Readout: LAST 303 ms → DAH · MASM core 5704 cycles</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>11</b></div>
+</section>
+
+<!-- ======================= 12 EAR TRAINING ======================= -->
+<section class="slide" aria-label="Ear training pedagogy">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>Ear Training · Study Path</span><span>12 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Learning that sticks</h2><span class="tag">FIGURES 3.1e – 3.1h</span></div>
+        <div class="body" style="display:grid;grid-template-columns:1fr 590px;gap:48px">
+            <div style="display:flex;flex-direction:column;gap:22px">
+                <div class="reveal d2">
+                    <div class="label" style="margin-bottom:10px">Staged curriculum · 10 lessons, grouped by structure</div>
+                    <table class="ledger">
+                        <tbody>
+                            <tr><td class="num">01</td><td class="mono"><b>E T</b></td><td>single element</td><td class="num">06</td><td class="mono"><b>X C Y Z</b></td><td>four elements, part 2</td></tr>
+                            <tr><td class="num">02</td><td class="mono"><b>I M S O</b></td><td>repeat-only</td><td class="num">07</td><td class="mono"><b>Q F H V</b></td><td>remaining letters</td></tr>
+                            <tr><td class="num">03</td><td class="mono"><b>A N R W</b></td><td>mirror pairs</td><td class="num">08</td><td class="mono"><b>1 – 5</b></td><td>dits take over</td></tr>
+                            <tr><td class="num">04</td><td class="mono"><b>D K G U</b></td><td>three elements</td><td class="num">09</td><td class="mono"><b>6 – 0</b></td><td>dahs take over</td></tr>
+                            <tr><td class="num">05</td><td class="mono"><b>L P J B</b></td><td>four elements, part 1</td><td class="num">10</td><td class="mono"><b>All 36</b></td><td>mixed review</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cols c2 reveal d3" style="height:auto;gap:28px">
+                    <div class="box" style="padding:22px 26px">
+                        <div class="label" style="margin-bottom:10px">Mastery model · ℓ(c) ∈ {0,1,2,3}</div>
+                        <p style="font-size:20px">Correct on the first try: ℓ + 1. A miss or <i>Show answer</i>: ℓ − 1. A lesson is done when every character reaches 3. Progress is saved to <code>%AppData%</code>.</p>
+                    </div>
+                    <div class="box fill" style="padding:22px 26px">
+                        <div class="label" style="margin-bottom:10px">Weakness-weighted selection</div>
+                        <p class="lede" style="font-size:32px;margin-bottom:6px">w(c) = 4 − ℓ(c)</p>
+                        <p style="font-size:20px">An unlearned character appears 4× as often as a mastered one. 20% of rounds review earlier lessons.</p>
+                    </div>
+                </div>
+                <p class="num reveal d4">Study guides derive relations automatically, such as "Reverse of N" and "Opposite of T", from each pattern's reverse and inverse. These parameters are design choices and haven't been validated with users yet.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:20px">
+                <img class="shot reveal d3" src="assets/study-path.png" alt="Study path showing ten lessons with mastery bars" style="width:590px;height:320px">
+                <img class="shot reveal d4" src="assets/ear-drill.png" alt="Ear training drill showing the character 8 answered correctly" style="width:590px;height:320px">
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>12</b></div>
+</section>
+
+<!-- ======================= 13 VERIFICATION ======================= -->
+<section class="slide" aria-label="Verification">
+    <div class="chrome top"><span>Chapter III · UI requirements and implementation</span><span>3.4 Empirical verification</span><span>13 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>Verified against the real DLL</h2><span class="tag">src/MorseCore.Tests · xUnit · x64</span></div>
+        <div class="body" style="display:grid;grid-template-columns:640px 1fr;gap:56px">
+            <div style="display:flex;flex-direction:column;gap:24px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px" class="reveal d2">
+                    <div><div class="big">110</div><div class="label" style="margin-top:10px">xUnit cases</div></div>
+                    <div><div class="big">158</div><div class="label" style="margin-top:10px">checks</div></div>
+                    <div><div class="big">0</div><div class="label" style="margin-top:10px">failed</div></div>
+                </div>
+                <p class="reveal d3">Tests call <code>MorseCore.dll</code> through the same <code>NativeMethods</code> / <code>MorseEngineService</code> path as the app, so the routines, the ABI boundary and the unit math are proven together.</p>
+                <figure class="reveal d4"><img class="shot" src="assets/test-run.png" alt="dotnet test summary: total 110, failed 0, succeeded 110" style="width:640px;height:185px;object-fit:contain;background:#0C0C0C"><figcaption class="cap">Listing 3.2 · dotnet test: total 110, failed 0, succeeded 110</figcaption></figure>
+            </div>
+            <table class="ledger reveal d3">
+                <thead><tr><th>ID</th><th>Routine</th><th>Input</th><th>Expected = actual</th><th></th></tr></thead>
+                <tbody>
+                    <tr><td class="mono">ENC-A</td><td class="mono">EncodeChar</td><td class="mono">'A'</td><td><span class="m"><i class="d"></i><i class="D"></i></span></td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">ENC-LOWER</td><td class="mono">EncodeChar</td><td class="mono">'a'..'z'</td><td>same as 'A'..'Z'</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">DEC-6-0C</td><td class="mono">DecodeChar</td><td class="mono">N=6, 0x0C</td><td>'?'</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">DEC-COUNT7</td><td class="mono">DecodeChar</td><td class="mono">N=7</td><td>0 (rejected)</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">QP-05-C</td><td class="mono">QuantizePress</td><td class="mono">t = T/4 @ 5 WPM</td><td>DIT</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">GAP-15-D</td><td class="mono">EvaluateGap</td><td class="mono">200 ms @ 15 WPM</td><td>COMMIT CHAR</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">GAP-15-G</td><td class="mono">EvaluateGap</td><td class="mono">480 ms @ 15 WPM</td><td>COMMIT WORD</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">RT-?</td><td class="mono">Decode(Encode)</td><td class="mono">'?'</td><td>'?' round-trip</td><td><span class="pass">PASS</span></td></tr>
+                    <tr><td class="mono">BENCH-MONO</td><td class="mono">BenchmarkCycles</td><td class="mono">1000 reads</td><td>non-decreasing</td><td><span class="pass">PASS</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7</span><b>13</b></div>
+</section>
+
+<!-- ======================= 14 CONCLUSION ======================= -->
+<section class="slide" aria-label="Limitations, recommendations, contributions">
+    <div class="chrome top"><span>Chapter IV · Summary, conclusion and recommendations</span><span>4.2 – 4.3 · Appendix A</span><span>14 / 14</span></div>
+    <div class="frame">
+        <div class="topbar reveal d1"><h2>What's next</h2><span class="tag">THANK YOU · QUESTIONS WELCOME</span></div>
+        <div class="body cols" style="grid-template-columns:1fr 1fr 560px">
+            <div class="reveal d2">
+                <div class="col-h"><span class="label">Limitations and lessons</span><span class="num">4.2</span></div>
+                <ul class="plain">
+                    <li>Runs only on 64-bit Windows: the core is bound to the Microsoft x64 ABI.</li>
+                    <li>Key timing is limited by the USB polling interval of the switch.</li>
+                    <li>Tests prove correctness, not usability. Only classmates have tried it, with no study yet involving the intended users.</li>
+                    <li>Lesson learned: generate expected test values from <code>lookup_tables.asm</code>, because hand-typed values can pass against a wrong table.</li>
+                </ul>
+            </div>
+            <div class="reveal d3">
+                <div class="col-h"><span class="label">Recommendations</span><span class="num">4.3</span></div>
+                <ul class="plain">
+                    <li><b>First:</b> a usability study with the intended users, measuring error rates and learning curves.</li>
+                    <li><b>Input:</b> a Pico or STM32 that presents a telegraph key as USB HID.</li>
+                    <li><b>Output:</b> haptic Dit/Dah through linear resonant actuators (Plaisier et al., 2020).</li>
+                    <li><b>Adaptive T</b> from recent keying (Yang, 2000), plus prosigns and non-Latin tables.</li>
+                </ul>
+            </div>
+            <div class="reveal d4" style="display:flex;flex-direction:column;gap:20px">
+                <div class="col-h"><span class="label">Contributions</span><span class="num">A.1</span></div>
+                <div class="idx" style="padding-top:4px"><span class="num">CK</span><div><div class="row-h" style="font-size:27px">Christoffer Kent R. Pamandanan</div><p style="font-size:19px">Assistive switch viability and the core engine assembly code.</p></div></div>
+                <div class="idx"><span class="num">JM</span><div><div class="row-h" style="font-size:27px">Justine Marion D. Gayola</div><p style="font-size:19px">App functions and the link from the assembly engine to C# / WPF.</p></div></div>
+                <div class="idx"><span class="num">AE</span><div><div class="row-h" style="font-size:27px">Alec Ezekiel M. Dela Pena</div><p style="font-size:19px">UI/UX design of the learner pages, plus documentation.</p></div></div>
+                <div style="display:flex;align-items:center;gap:22px;margin-top:auto">
+                    <div class="logo" style="width:96px;height:74px"></div>
+                    <span class="m" aria-label="Morse sign-off: dit dit dit dah dit dah"><i class="d"></i><i class="d"></i><i class="d"></i><i class="D"></i><i class="d"></i><i class="D"></i></span>
+                    <span class="num">SK · end of contact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome bot"><span>Morseling · CAO10 Group 7 · Instructor: Ray A. Nicolas</span><b>14</b></div>
+</section>
+
+</main>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Stage scaling, keyboard / wheel / touch navigation, URL hash.
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = [...document.querySelectorAll('.slide')];
+        this.stage = document.getElementById('deckStage');
+        this.progress = document.getElementById('progress');
+        this.current = 0;
+        this.setupStageScale();
+        this.setupNav();
+        const fromHash = parseInt(location.hash.slice(1), 10);
+        this.show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+    }
+
+    setupStageScale() {
+        const scale = () => {
+            const f = Math.min(innerWidth / 1920, innerHeight / 1080);
+            const x = (innerWidth - 1920 * f) / 2;
+            const y = (innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        addEventListener('resize', scale);
+    }
+
+    setupNav() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.isContentEditable) return;
+            if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); this.show(this.current + 1); }
+            if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.show(this.current - 1); }
+            if (e.key === 'Home') this.show(0);
+            if (e.key === 'End') this.show(this.slides.length - 1);
+        });
+        let wheelLock = false;
+        addEventListener('wheel', (e) => {
+            if (wheelLock || Math.abs(e.deltaY) < 20) return;
+            wheelLock = true;
+            this.show(this.current + (e.deltaY > 0 ? 1 : -1));
+            setTimeout(() => (wheelLock = false), 700);
+        }, { passive: true });
+        let x0 = null;
+        addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+        addEventListener('touchend', (e) => {
+            if (x0 === null) return;
+            const dx = e.changedTouches[0].clientX - x0;
+            if (Math.abs(dx) > 50) this.show(this.current + (dx < 0 ? 1 : -1));
+            x0 = null;
+        });
+    }
+
+    show(i) {
+        this.current = Math.max(0, Math.min(i, this.slides.length - 1));
+        this.slides.forEach((s, n) => {
+            s.classList.toggle('active', n === this.current);
+            s.classList.toggle('visible', n === this.current);
+        });
+        this.progress.style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+        history.replaceState(null, '', `#${this.current + 1}`);
+    }
+}
+const deck = new SlidePresentation();
+
+/* ===========================================
+   INLINE EDITOR
+   E toggles edit mode; edits autosave to localStorage; Ctrl+S downloads the HTML.
+   =========================================== */
+const editor = {
+    isActive: false,
+    key: 'morseling-deck-edits',
+    targets() { return document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide li, .slide td, .slide .label, .slide .row-h, .chrome span, .chrome b, .cap'); },
+    restore() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(this.key) || 'null');
+            if (saved) this.targets().forEach((el, i) => { if (saved[i] !== undefined) el.innerHTML = saved[i]; });
+        } catch (e) { /* storage unavailable: start from the authored text */ }
+    },
+    save() {
+        try { localStorage.setItem(this.key, JSON.stringify([...this.targets()].map((el) => el.innerHTML))); } catch (e) {}
+    },
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        document.getElementById('editToggle').classList.toggle('active', this.isActive);
+        this.targets().forEach((el) => {
+            if (this.isActive) el.setAttribute('contenteditable', 'true');
+            else el.removeAttribute('contenteditable');
+        });
+        if (!this.isActive) this.save();
+    },
+    download() {
+        this.save();
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+        clone.querySelector('body').classList.remove('editing');
+        const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], { type: 'text/html' });
+        const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'morseling-capstone.html' });
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+};
+editor.restore();
+document.addEventListener('input', () => editor.save());
+
+const editToggle = document.getElementById('editToggle');
+const hotzone = document.getElementById('editHotzone');
+let hideTimeout = null;
+editToggle.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+hotzone.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+editToggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+document.addEventListener('keydown', (e) => {
+    if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable && !e.ctrlKey && !e.metaKey) editor.toggleEditMode();
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); editor.download(); }
+});
+</script>
+</body>
+</html>
